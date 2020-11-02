@@ -1,12 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
-const UserInput = ({ updateDailyCalTotState, updateEatingWindowState }) => {
+const UserInput = ({ updateDailyCalTotState, updateEatingWindowState, updateStartedState, updateEndTimeState }) => {
   const onClick = (event) => {
     event.preventDefault();
 
     const cals = document.getElementById('icon_food').value;
     const hours = document.getElementById('icon_clock').value;
+
+    const curTime = new Date();
+    let endHour = curTime.getHours() + parseInt(hours);
+
+    let endMinute = (curTime.getMinutes() < 10)
+      ? ('0' + curTime.getMinutes().toString()) 
+      : (curTime.getMinutes().toString());
+
+    let windowEnd = (endHour < 12)
+      ? (endHour.toString() + ':' + endMinute + 'am')
+      : (endHour === 12)
+      ? (endHour.toString() + ':' + endMinute + 'pm')
+      : ((endHour - 12).toString() + ':' + endMinute + 'pm');
+    
 
     // check if cals is an integer
     // check if cals is filled in
@@ -16,6 +30,8 @@ const UserInput = ({ updateDailyCalTotState, updateEatingWindowState }) => {
     } else {
       updateDailyCalTotState(cals);
       updateEatingWindowState(hours);
+      updateStartedState();
+      updateEndTimeState(windowEnd);
     }
   }
 
@@ -47,6 +63,7 @@ const UserInput = ({ updateDailyCalTotState, updateEatingWindowState }) => {
 UserInput.propTypes = {
   updateDailyCalTotState: PropTypes.func.isRequired,
   updateEatingWindowState: PropTypes.func.isRequired,
+  updateStartedState: PropTypes.func.isRequired,
 }
 
 export default UserInput

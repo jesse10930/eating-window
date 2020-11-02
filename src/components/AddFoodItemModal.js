@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const AddFoodItemModal = ({ foodListArr, updateFoodListArrState }) => {
+const AddFoodItemModal = ({ foodListArr, updateFoodListArrState, dailyCalTot, updateDailyCalTotState }) => {
   const [foodItem, setFoodItem] = useState('');
   const [servingSize, setServingSize] = useState('');
   const [calories, setCalories] = useState('');
@@ -9,7 +9,10 @@ const AddFoodItemModal = ({ foodListArr, updateFoodListArrState }) => {
   const onSubmit = () => {
     let newFoodItem = [foodItem, servingSize, calories];
     let newFoodList = foodListArr.slice().concat([newFoodItem]);
+    let newCals = parseInt(dailyCalTot) - parseInt(calories);
+    
     updateFoodListArrState(newFoodList);
+    updateDailyCalTotState(newCals.toString());
   }
 
   return (
@@ -64,6 +67,8 @@ const modalStyle = {
 AddFoodItemModal.propTypes = {
   foodListArr: PropTypes.array.isRequired,
   updateFoodListArrState: PropTypes.func.isRequired,
+  dailyCalTot: PropTypes.string.isRequired,
+  updateDailyCalTotState: PropTypes.func.isRequired,
 }
 
 export default AddFoodItemModal;

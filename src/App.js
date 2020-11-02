@@ -11,6 +11,8 @@ const  App = () => {
    const [dailyCalTot, setDailyCalTot] = useState('0');
    const [eatingWindow, setEatingWindow] = useState('0');
    const [foodListArr, setFoodListArr] = useState([]);
+   const [started, setStarted] = useState(false);
+   const [endTime, setEndTime] = useState('');
 
    useEffect(() => {
      // Init Materialize JS
@@ -30,22 +32,41 @@ const  App = () => {
      setFoodListArr(foodItem);
    }
 
+   const updateStartedState = () => {
+     setStarted(true);
+   }
+
+   const updateEndTimeState = (windowEnd) => {
+     setEndTime(windowEnd);
+   }
+
   return (
     <div className="App">
       {/* daily calorie total set function and eating window set function passed as props to userinput component */}
-      <UserInput 
-        updateDailyCalTotState={updateDailyCalTotState}
-        updateEatingWindowState={updateEatingWindowState} 
-      />
+      {!started && (
+        <UserInput 
+          updateDailyCalTotState={updateDailyCalTotState}
+          updateEatingWindowState={updateEatingWindowState}
+          updateStartedState={updateStartedState}
+          updateEndTimeState={updateEndTimeState}
+        />
+      )}
       {/* daily calorie total state and eating window state passed as props to remaining component */}
       <Remaining 
         dailyCalTot={dailyCalTot} 
-        eatingWindow={eatingWindow} 
+        eatingWindow={eatingWindow}
+        started={started}
+        endTime={endTime}
       />
-      <AddFoodBtn />
-      <AddFoodItemModal foodListArr={foodListArr} updateFoodListArrState={updateFoodListArrState}/>
+      <AddFoodBtn started={started}/>
+      <AddFoodItemModal 
+        foodListArr={foodListArr} 
+        updateFoodListArrState={updateFoodListArrState}
+        updateDailyCalTotState={updateDailyCalTotState}
+        dailyCalTot={dailyCalTot}
+      />
       {/* food list array state passed as props to FoodList component */}
-      <FoodList foodListArr={foodListArr} />
+      <FoodList foodListArr={foodListArr} started={started}/>
     </div>
   );
 }
