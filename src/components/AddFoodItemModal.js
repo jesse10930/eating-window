@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const AddFoodItemModal = ({ foodListArr, updateFoodListArrState, dailyCalTot, updateDailyCalTotState }) => {
+const AddFoodItemModal = ({ 
+  foodListArr, 
+  updateFoodListArrState, 
+  dailyCalTot, 
+  updateDailyCalTotState, 
+  updateEndTimeState, 
+  eatingWindow, 
+  startTime, 
+  updateStartTimeState, 
+  updateSetTimeSinceFirstMealState,
+  updateCurTimeState 
+}) => {
   const [foodItem, setFoodItem] = useState('');
   const [servingSize, setServingSize] = useState('');
   const [calories, setCalories] = useState('');
@@ -10,9 +21,25 @@ const AddFoodItemModal = ({ foodListArr, updateFoodListArrState, dailyCalTot, up
     let newFoodItem = [foodItem, servingSize, calories];
     let newFoodList = foodListArr.slice().concat([newFoodItem]);
     let newCals = parseInt(dailyCalTot) - parseInt(calories);
+
+    const curTime = new Date();
+    let endHour = curTime.getHours() + parseInt(eatingWindow);
+    let tempEndTime = new Date();
+    tempEndTime.setHours(endHour)
     
     updateFoodListArrState(newFoodList);
     updateDailyCalTotState(newCals.toString());
+    updateCurTimeState(curTime);
+
+    if (foodListArr.length === 0) {
+      updateEndTimeState(tempEndTime);
+      updateStartTimeState(curTime);
+    }
+
+    if (foodListArr.length > 0) {
+      let exactHours = (((curTime - startTime)/1000)/60)/60;
+      updateSetTimeSinceFirstMealState(exactHours.toFixed(2) + ' hours');
+    }
   }
 
   return (
@@ -69,6 +96,12 @@ AddFoodItemModal.propTypes = {
   updateFoodListArrState: PropTypes.func.isRequired,
   dailyCalTot: PropTypes.string.isRequired,
   updateDailyCalTotState: PropTypes.func.isRequired,
+  updateEndTimeState: PropTypes.func.isRequired,
+  eatingWindow: PropTypes.string.isRequired,
+  startTime: PropTypes.instanceOf(Date),
+  updateStartTimeState: PropTypes.func.isRequired,
+  updateSetTimeSinceFirstMealState: PropTypes.func.isRequired,
+  updateCurTimeState: PropTypes.func.isRequired,
 }
 
 export default AddFoodItemModal;
