@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 const AddFoodItemModal = ({ 
   foodListArr, 
@@ -10,7 +11,7 @@ const AddFoodItemModal = ({
   eatingWindow, 
   startTime, 
   updateStartTimeState, 
-  updateSetTimeSinceFirstMealState,
+  updateTimeSinceFirstMealState,
   updateCurTimeState 
 }) => {
   const [foodItem, setFoodItem] = useState('');
@@ -34,12 +35,26 @@ const AddFoodItemModal = ({
     if (foodListArr.length === 0) {
       updateEndTimeState(tempEndTime);
       updateStartTimeState(curTime);
+
+      axios.post('api/remaining', {
+        startTime: curTime,
+        eatingWindow: parseInt(eatingWindow),
+        calorieGoal: parseInt(dailyCalTot)
+      })
+        .then(res => console.log(res.data))
     }
 
     if (foodListArr.length > 0) {
       let exactHours = (((curTime - startTime)/1000)/60)/60;
-      updateSetTimeSinceFirstMealState(exactHours.toFixed(2) + ' hours');
+      updateTimeSinceFirstMealState(exactHours.toFixed(2) + ' hours');
     }
+
+    axios.post('api/foods', {
+      item: foodItem,
+      quantity: servingSize,
+      calories: calories
+    })
+      .then(res => console.log(res.data));
   }
 
   return (
@@ -50,7 +65,8 @@ const AddFoodItemModal = ({
             <input 
               type="text" 
               name='food' 
-              value={foodItem} onChange={event => setFoodItem(event.target.value)}
+              value={foodItem} 
+              onChange={event => setFoodItem(event.target.value)}
               autoComplete='off'
             />
             <label htmlFor='food' className='active'>Food Item</label>
@@ -61,7 +77,8 @@ const AddFoodItemModal = ({
           <input 
               type="text" 
               name='serving' 
-              value={servingSize} onChange={event => setServingSize(event.target.value)}
+              value={servingSize} 
+              onChange={event => setServingSize(event.target.value)}
               autoComplete='off'
             />
             <label htmlFor='serving' className='active'>Serving Size</label>
@@ -72,7 +89,8 @@ const AddFoodItemModal = ({
           <input 
               type="text" 
               name='calories' 
-              value={calories} onChange={event => setCalories(event.target.value)}
+              value={calories} 
+              onChange={event => setCalories(event.target.value)}
               autoComplete='off'
             />
             <label htmlFor='calories' className='active'>Calories</label>
@@ -100,7 +118,7 @@ AddFoodItemModal.propTypes = {
   eatingWindow: PropTypes.string.isRequired,
   startTime: PropTypes.instanceOf(Date),
   updateStartTimeState: PropTypes.func.isRequired,
-  updateSetTimeSinceFirstMealState: PropTypes.func.isRequired,
+  updateTimeSinceFirstMealState: PropTypes.func.isRequired,
   updateCurTimeState: PropTypes.func.isRequired,
 }
 
