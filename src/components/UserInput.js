@@ -5,15 +5,28 @@ const UserInput = ({ updateDailyCalTotState, updateEatingWindowState, updateStar
   const onClick = (event) => {
     event.preventDefault();
 
+    // declare input from users
     const cals = document.getElementById('icon_food').value;
     const hours = document.getElementById('icon_clock').value;
 
-    // check if cals is an integer
-    // check if cals is filled in
-    // check if eating window is filled in
+    // regix to check for positive integer
+    const isNumeric = (value) => {
+      return /^\d+$/.test(value);
+    }
+
+    // check user inputs positive integer for calories and eating window
     if (cals.includes(',')) {
-      window.M.toast({html: 'Refrain from using a comma if number is greater than 1,000'});
+      window.M.toast({html: 'Refrain from using a comma for numbers in the 1000s'});
+    } else if (cals.includes('.') || isNaN(cals)) {
+      window.M.toast({html: 'Enter an integer value'});
+    } else if (parseInt(cals) < 0) {
+      window.M.toast({html: 'Enter an integer greater than 0'});
+    } else if (cals === '') {
+      window.M.toast({html: 'Enter calorie goal'})
+    } else if (!isNumeric(hours)) {
+      window.M.toast({html: 'Enter integer value eating window'})
     } else {
+      // set dailyCalTot, eatingWindow, and started app level states
       updateDailyCalTotState(cals);
       updateEatingWindowState(hours);
       updateStartedState();

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// food schema for mongoDB with keys item, quantity, and calories
 const FoodSchema = mongoose.Schema({
   item: {
     type: String,

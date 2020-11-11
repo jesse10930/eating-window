@@ -12,26 +12,28 @@ const NewDayBtn = ({
   updateStartTimeState,
   updateCurTimeState,
   updateTimeSinceFirstMealState
- }) => {
-   const onClick = (event) => {
-     event.preventDefault();
-     updateStartedState();
-     updateDailyCalTotState('0')
-     updateEatingWindowState('0')
-     updateFoodListArrState([])
-     updateEndTimeState()
-     updateStartTimeState()
-     updateCurTimeState()
-     updateTimeSinceFirstMealState('')
-
+}) => {
+  const onClick = (event) => {
+    // update app states to default
+    event.preventDefault();
+    updateStartedState();
+    updateDailyCalTotState('0')
+    updateEatingWindowState('0')
+    updateFoodListArrState([])
+    updateEndTimeState()
+    updateStartTimeState()
+    updateCurTimeState()
+    updateTimeSinceFirstMealState('')
+    
+    // delete data from databases
     axios.delete('api/foods')
       .then(res => console.log(res.data));
-    
     axios.delete('api/remaining')
       .then(res => console.log(res.data));
-   }
+  }
 
   return (
+    // return if started is true
     started && (
       <div className="next-day-comp-container center">
         <button 
