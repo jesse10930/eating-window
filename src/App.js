@@ -6,6 +6,7 @@ import FoodList from './components/FoodList';
 import AddFoodItemModal from './components/AddFoodItemModal';
 import NewDayBtn from './components/NewDayBtn';
 import axios from 'axios';
+
 import './App.css';
 
 const  App = () => {
