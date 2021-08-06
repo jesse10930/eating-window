@@ -175,7 +175,7 @@ const AddFoodItemModal = ({
 // size modal
 const modalStyle = {
   width: '60%',
-  height: '70%',
+  height: '80%',
 };
 
 AddFoodItemModal.propTypes = {
