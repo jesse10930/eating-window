@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect } from 'react';
 import UserInput from './components/UserInput';
 import Remaining from './components/Remaining';
 import AddFoodBtn from './components/AddFoodBtn';
@@ -9,7 +9,7 @@ import axios from 'axios';
 
 import './App.css';
 
-const  App = () => {
+const App = () => {
   // initializing state
   const [dailyCalTot, setDailyCalTot] = useState('0');
   const [eatingWindow, setEatingWindow] = useState('0');
@@ -18,7 +18,7 @@ const  App = () => {
   const [endTime, setEndTime] = useState();
   const [startTime, setStartTime] = useState();
   const [curTime, setCurTime] = useState();
-  const [timeSinceFirstMeal, setTimeSinceFirstMeal] = useState('')
+  const [timeSinceFirstMeal, setTimeSinceFirstMeal] = useState('');
 
   // useEffect hook runs once upon initial mount
   useEffect(() => {
@@ -26,8 +26,7 @@ const  App = () => {
     window.M.AutoInit();
 
     // check if data already entered
-    Promise.all([firstApiCall(), secondApiCall()])
-    .then((results) => {
+    Promise.all([firstApiCall(), secondApiCall()]).then((results) => {
       // get results of both api calls, update state if db has values
       if (results[0].data.length > 0) {
         const food = results[0].data;
@@ -37,9 +36,9 @@ const  App = () => {
         let tempFoodArr = [];
         Object.keys(food).forEach((entry) => {
           tempFoodArr.push([
-            food[entry]['item'], 
-            food[entry]['quantity'], 
-            food[entry]['calories']
+            food[entry]['item'],
+            food[entry]['quantity'],
+            food[entry]['calories'],
           ]);
         });
         updateFoodListArrState(tempFoodArr);
@@ -50,12 +49,14 @@ const  App = () => {
         // set dailyCalTot state
         let tempCalTot = 0;
         Object.keys(food).forEach((entry) => {
-          tempCalTot += food[entry]['calories']
-        })
-        updateDailyCalTotState((remaining[0]['calorieGoal'] - tempCalTot).toString());
+          tempCalTot += food[entry]['calories'];
+        });
+        updateDailyCalTotState(
+          (remaining[0]['calorieGoal'] - tempCalTot).toString()
+        );
 
         // set eatingWindow state
-        updateEatingWindowState(remaining[0]['eatingWindow'].toString())
+        updateEatingWindowState(remaining[0]['eatingWindow'].toString());
 
         // set curTime state
         updateCurTimeState(new Date());
@@ -68,7 +69,9 @@ const  App = () => {
         let curTimeStr = Date.parse(now);
         let start = new Date(remaining[0]['startTime']);
         let startTimeStr = Date.parse(start);
-        updateTimeSinceFirstMealState(((((curTimeStr - startTimeStr)/1000)/60)/60).toFixed(2) + ' hours')
+        updateTimeSinceFirstMealState(
+          ((curTimeStr - startTimeStr) / 1000 / 60 / 60).toFixed(2) + ' hours'
+        );
 
         // set endTime state
         let endHour = start.getHours() + remaining[0]['eatingWindow'];
@@ -90,59 +93,59 @@ const  App = () => {
     return axios.get('api/remaining');
   }
 
-   // change dailyCalTot state
-   const updateDailyCalTotState = (userCalTot) => {
-     setDailyCalTot(userCalTot);
-   }
+  // change dailyCalTot state
+  const updateDailyCalTotState = (userCalTot) => {
+    setDailyCalTot(userCalTot);
+  };
 
-   // change eatingWindow state 
-   const updateEatingWindowState = (userEatingWindow) => {
-     setEatingWindow(userEatingWindow);
-   }
+  // change eatingWindow state
+  const updateEatingWindowState = (userEatingWindow) => {
+    setEatingWindow(userEatingWindow);
+  };
 
   //  change foodListArr state
-   const updateFoodListArrState = (foodItem) => {
-     setFoodListArr(foodItem);
-   }
+  const updateFoodListArrState = (foodItem) => {
+    setFoodListArr(foodItem);
+  };
 
   //  change started state
-   const updateStartedState = () => {
-     setStarted(!started);
-   }
+  const updateStartedState = () => {
+    setStarted(!started);
+  };
 
   //  change endTime state
-   const updateEndTimeState = (windowEnd) => {
-     setEndTime(windowEnd);
-   }
+  const updateEndTimeState = (windowEnd) => {
+    setEndTime(windowEnd);
+  };
 
   //  change startTime state
-   const updateStartTimeState = (windowStart) => {
-     setStartTime(windowStart);
-   }
+  const updateStartTimeState = (windowStart) => {
+    setStartTime(windowStart);
+  };
 
   //  change timeSinceFirstMeal state
-   const updateTimeSinceFirstMealState = (newTime) => {
-     setTimeSinceFirstMeal(newTime);
-   }
+  const updateTimeSinceFirstMealState = (newTime) => {
+    setTimeSinceFirstMeal(newTime);
+  };
 
   //  change curTime state
-   const updateCurTimeState = (now) => {
-     setCurTime(now);
-   }
+  const updateCurTimeState = (now) => {
+    setCurTime(now);
+  };
 
   return (
-    <div className="App">
+    <div className='App'>
       {/* UserInput comp resceives and stores data from user */}
       {!started && (
-        <UserInput 
+        <UserInput
           updateDailyCalTotState={updateDailyCalTotState}
           updateEatingWindowState={updateEatingWindowState}
           updateStartedState={updateStartedState}
         />
       )}
       {/* Remaining comp displays inormation about calories and time based on user input */}
-      <Remaining 
-        dailyCalTot={dailyCalTot} 
+      <Remaining
+        dailyCalTot={dailyCalTot}
         timeSinceFirstMeal={timeSinceFirstMeal}
         started={started}
         endTime={endTime}
@@ -152,10 +155,10 @@ const  App = () => {
         startTime={startTime}
       />
       {/* AddFoodBtn comp launches a modal */}
-      <AddFoodBtn started={started}/>
+      <AddFoodBtn started={started} />
       {/* AddFoodItemModal comp is a modal that accepts and stores food input from user and updates state based on that input */}
-      <AddFoodItemModal 
-        foodListArr={foodListArr} 
+      <AddFoodItemModal
+        foodListArr={foodListArr}
         updateFoodListArrState={updateFoodListArrState}
         updateDailyCalTotState={updateDailyCalTotState}
         dailyCalTot={dailyCalTot}
@@ -167,9 +170,9 @@ const  App = () => {
         updateCurTimeState={updateCurTimeState}
       />
       {/* FoodList comp displays the food items entered by user */}
-      <FoodList foodListArr={foodListArr} started={started}/>
+      <FoodList foodListArr={foodListArr} started={started} />
       {/* NewDayBtn clears the state and returns user to user input page */}
-      <NewDayBtn 
+      <NewDayBtn
         started={started}
         updateStartedState={updateStartedState}
         updateDailyCalTotState={updateDailyCalTotState}
@@ -182,6 +185,6 @@ const  App = () => {
       />
     </div>
   );
-}
+};
 
 export default App;
