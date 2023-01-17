@@ -13,4 +13,4 @@ To practice building a fullstack app. To practice using React. To build somethin
 * Nodemon for development environment
 * ReactRouter for navigation
 * Axios for API calls
-* Heroku for deployment
+* Railway for deployment
