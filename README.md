@@ -1,5 +1,5 @@
 # Eating Window
-Web app to help keep track of calories eaten throughout the day and eating window for intermittent fasting.
+Web application to help keep track of calories eaten throughout the day and eating window for intermittent fasting.
 
 # Motivation
 To practice building a fullstack app. To practice using React. To build something useful for my day-to-day life.
